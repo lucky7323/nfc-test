@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import tw from 'twin.macro';
+import { useEffect } from "react";
+import tw from "twin.macro";
 import {
   formatEther,
   parseEther,
@@ -8,16 +8,16 @@ import {
   serializeTransaction,
   Signature,
   TransactionSerializableEIP1559,
-} from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
+} from "viem";
+import { privateKeyToAccount } from "viem/accounts";
 
-import { mumbai, publicClient, walletClient } from '~/configs/setup-contract';
-import { TESTER_PRIVATE_KEY } from '~/constants';
+import { mumbai, publicClient, walletClient } from "~/configs/setup-contract";
+import { TESTER_PRIVATE_KEY } from "~/constants";
 
 const TxTestPage = () => {
   const getBalance = async () => {
     const res = await publicClient.getBalance({
-      address: '0x48DBa2D1b6C89Bf8234C2B63554369aDC7Ae3258',
+      address: "0x48DBa2D1b6C89Bf8234C2B63554369aDC7Ae3258",
     });
 
     return formatEther(res);
@@ -27,17 +27,20 @@ const TxTestPage = () => {
     const serialized = serializeTransaction({
       chainId: 80001,
       gas: 21001n,
-      maxFeePerGas: parseGwei('20'),
-      maxPriorityFeePerGas: parseGwei('2'),
+      maxFeePerGas: parseGwei("20"),
+      maxPriorityFeePerGas: parseGwei("2"),
       nonce: 69,
-      to: '0x48DBa2D1b6C89Bf8234C2B63554369aDC7Ae3258',
-      value: parseEther('0.0001'),
+      to: "0x48DBa2D1b6C89Bf8234C2B63554369aDC7Ae3258",
+      value: parseEther("0.0001"),
     });
 
     return serialized;
   };
 
-  const serializeTx2 = (parsed: TransactionSerializableEIP1559, signature: Signature) => {
+  const serializeTx2 = (
+    parsed: TransactionSerializableEIP1559,
+    signature: Signature
+  ) => {
     const serialized = serializeTransaction(parsed, signature);
 
     return serialized;
@@ -54,10 +57,10 @@ const TxTestPage = () => {
     console.log(account.address);
 
     const signedTx = await account.signTransaction(tx);
-    console.log('signedTx', signedTx);
+    console.log("signedTx", signedTx);
 
     const gasPrice = await publicClient.getGasPrice();
-    console.log('gasPrice', gasPrice);
+    console.log("gasPrice", gasPrice);
 
     // const sentTx = await walletClient.sendTransaction({
     //   account,
@@ -69,6 +72,27 @@ const TxTestPage = () => {
     // console.log(sentTx);
   };
 
+  const handleNfcReading = async () => {
+    if (typeof NDEFReader === "undefined") {
+      alert("NFC is not supported in this browser.");
+      return;
+    }
+
+    try {
+      console.log("start");
+      const ndef = new NDEFReader();
+      await ndef.scan();
+      console.log("------");
+
+      ndef.onreading = (event) => {
+        // Handle the data read from the NFC tag
+        console.log(event);
+      };
+    } catch (error) {
+      console.error("Error while scanning NFC:", error);
+    }
+  };
+
   useEffect(() => {
     const balance = getBalance();
     const serialized = serializeTx();
@@ -76,9 +100,14 @@ const TxTestPage = () => {
     const signed = signTx(parsed);
   }, []);
 
-  return <Wrapper></Wrapper>;
+  return (
+    <Wrapper>
+      <Nfc onClick={handleNfcReading}>'NFC'</Nfc>
+    </Wrapper>
+  );
 };
 
 const Wrapper = tw.div``;
-
+const Nfc = tw.button`
+`;
 export default TxTestPage;
