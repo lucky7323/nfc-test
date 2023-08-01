@@ -72,27 +72,6 @@ const TxTestPage = () => {
     // console.log(sentTx);
   };
 
-  const handleNfcReading = async () => {
-    if (typeof NDEFReader === "undefined") {
-      alert("NFC is not supported in this browser.");
-      return;
-    }
-
-    try {
-      console.log("start");
-      const ndef = new NDEFReader();
-      await ndef.scan();
-      console.log("------");
-
-      ndef.onreading = (event) => {
-        // Handle the data read from the NFC tag
-        console.log(event);
-      };
-    } catch (error) {
-      console.error("Error while scanning NFC:", error);
-    }
-  };
-
   useEffect(() => {
     const balance = getBalance();
     const serialized = serializeTx();
@@ -100,14 +79,8 @@ const TxTestPage = () => {
     const signed = signTx(parsed);
   }, []);
 
-  return (
-    <Wrapper>
-      <Nfc onClick={handleNfcReading}>'NFC'</Nfc>
-    </Wrapper>
-  );
+  return <Wrapper></Wrapper>;
 };
 
 const Wrapper = tw.div``;
-const Nfc = tw.button`
-`;
 export default TxTestPage;
