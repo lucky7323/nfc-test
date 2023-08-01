@@ -43,10 +43,7 @@ declare class NDEFReader extends EventTarget {
   onreading: (this: this, event: NDEFReadingEvent) => any;
   onreadingerror: (this: this, error: Event) => any;
   scan: (options?: NDEFScanOptions) => Promise<void>;
-  write: (
-    message: NDEFMessageSource,
-    options?: NDEFWriteOptions
-  ) => Promise<void>;
+  write: (message: NDEFMessageSource, options?: NDEFWriteOptions) => Promise<void>;
 }
 
 interface Window {

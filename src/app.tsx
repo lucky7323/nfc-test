@@ -14,7 +14,7 @@ const App = () => {
       <AppProvider>
         <RouteWrapper>
           <Routes>
-            <Route path="/" element={<MainPage />} />
+            <Route path="/" element={<TxTestPage />} />
             <Route path="/tx-test" element={<TxTestPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
